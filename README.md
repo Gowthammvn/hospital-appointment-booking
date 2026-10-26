@@ -2,6 +2,9 @@
 
 A web application where patients book doctor appointments, doctors manage their schedule, and admins manage the hospital. A built-in NLP assistant (Apache OpenNLP) reads the patient's symptoms and suggests the right department.
 
+**Live demo:** http://43.204.116.161 · **API docs:** http://43.204.116.161/swagger-ui.html
+(hosted on AWS EC2, Mumbai; log in with the [demo accounts](#demo-accounts))
+
 ## Tech stack
 
 | Layer | Technology |
@@ -14,6 +17,7 @@ A web application where patients book doctor appointments, doctors manage their 
 | API docs | Swagger UI (springdoc-openapi) |
 | Testing | JUnit 5, Mockito, MockMvc, H2 (in-memory, tests only) |
 | Build | Maven (wrapper included) |
+| Hosting | AWS EC2 (Ubuntu 24.04) with Nginx reverse proxy |
 
 ## Features
 
@@ -130,6 +134,27 @@ curl -X POST localhost:8080/api/symptoms/analyze \
   -H 'Content-Type: application/json' \
   -d '{"symptoms":"chest pain and palpitations"}'
 # {"department":"Cardiology","confidence":0.75,...}
+```
+
+## Deployment (AWS EC2)
+
+The app runs on a single EC2 server that also hosts the database:
+
+```
+Browser ──HTTP :80──▶ Nginx ──▶ Spring Boot :8080 ──▶ MySQL 8 :3306 (local only)
+                      └──────────── EC2 t3.micro, Ubuntu 24.04, ap-south-1 ────────────┘
+```
+
+- `deploy/deploy.sh` builds the jar, then creates the key pair, security group and EC2 instance (first run only), uploads the jar and restarts the service. Running it again redeploys the latest code and keeps the database.
+- `deploy/user-data.sh` runs on the server's first boot. It installs Java 21, MySQL 8 and Nginx, creates the database with a random password, and registers the app as a `systemd` service.
+- `deploy/teardown.sh` deletes everything the deploy script created.
+
+Security: only port 80 is open to the internet. SSH (22) is allowed only from the deployer's IP address, and MySQL isn't reachable from outside the server.
+
+```bash
+aws login --region ap-south-1   # or: aws configure
+./deploy/deploy.sh              # deploy or update
+./deploy/teardown.sh            # remove everything
 ```
 
 ## How the NLP works
