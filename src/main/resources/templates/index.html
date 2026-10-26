@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head('Home')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main>
+    <section class="hero py-5">
+        <div class="container py-4">
+            <div class="row align-items-center">
+                <div class="col-lg-7">
+                    <h1 class="display-5 fw-bold">Book a doctor in minutes</h1>
+                    <p class="lead mb-4">Describe your symptoms and our smart assistant suggests the right department.
+                        Pick a doctor, choose a free slot, done.</p>
+                    <a sec:authorize="!isAuthenticated()" th:href="@{/register}" class="btn btn-light btn-lg me-2">Get started</a>
+                    <a sec:authorize="!isAuthenticated()" th:href="@{/login}" class="btn btn-outline-light btn-lg">Login</a>
+                    <a sec:authorize="hasRole('PATIENT')" th:href="@{/patient/book}" class="btn btn-light btn-lg">Book an appointment</a>
+                    <a sec:authorize="hasAnyRole('DOCTOR','ADMIN')" th:href="@{/dashboard}" class="btn btn-light btn-lg">Go to dashboard</a>
+                </div>
+                <div class="col-lg-5 d-none d-lg-block text-center">
+                    <i class="bi bi-heart-pulse" style="font-size: 9rem; opacity: .85"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="container py-5">
+        <h2 class="h3 mb-4">Departments</h2>
+        <div class="row g-3">
+            <div class="col-sm-6 col-lg-3" th:each="dept : ${departments}">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <i class="bi bi-clipboard2-pulse dept-icon"></i>
+                        <h3 class="h6 mt-2 mb-1" th:text="${dept.name}">Cardiology</h3>
+                        <p class="small text-muted mb-0" th:text="${dept.description}">Description</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="container pb-5">
+        <h2 class="h3 mb-4">Our Doctors</h2>
+        <div class="row g-3">
+            <div class="col-md-6 col-lg-4" th:each="doc : ${doctors}">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h3 class="h6 mb-1" th:text="${doc.name}">Dr. Name</h3>
+                        <div class="small text-primary mb-2" th:text="${doc.specialization}">Specialization</div>
+                        <div class="small text-muted" th:text="${doc.qualification}">Qualification</div>
+                        <div class="small text-muted">
+                            <span th:text="${doc.experienceYears}">10</span> yrs experience &middot;
+                            &#8377;<span th:text="${#numbers.formatDecimal(doc.consultationFee, 1, 0)}">500</span>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-white border-0 pt-0">
+                        <span class="badge text-bg-light" th:text="${doc.department.name}">Dept</span>
+                        <a sec:authorize="hasRole('PATIENT')" th:href="@{/patient/book(doctorId=${doc.id})}"
+                           class="btn btn-sm btn-primary float-end">Book</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

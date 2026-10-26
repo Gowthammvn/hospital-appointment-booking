@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('My Schedule')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main class="container py-4">
+    <h1 class="h3 mb-1" th:text="${doctor.name}">Dr. Name</h1>
+    <p class="text-muted mb-4">
+        <span th:text="${doctor.specialization}">Spec</span> &middot; <span th:text="${doctor.department.name}">Dept</span>
+        <span th:unless="${doctor.available}" class="badge text-bg-secondary ms-2">Not accepting new bookings</span>
+    </p>
+    <div th:replace="~{fragments/layout :: flash}"></div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card stat-card shadow-sm"><div class="card-body">
+                <div class="text-muted small">Today</div>
+                <div class="display-6" th:text="${todayCount}">0</div>
+            </div></div>
+        </div>
+        <div class="col-md-4">
+            <div class="card stat-card shadow-sm"><div class="card-body">
+                <div class="text-muted small">Pending confirmation</div>
+                <div class="display-6 text-warning" th:text="${pendingCount}">0</div>
+            </div></div>
+        </div>
+        <div class="col-md-4">
+            <div class="card stat-card shadow-sm"><div class="card-body">
+                <div class="text-muted small">Confirmed</div>
+                <div class="display-6 text-primary" th:text="${confirmedCount}">0</div>
+            </div></div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <div th:if="${#lists.isEmpty(appointments)}" class="p-5 text-center text-muted">No appointments yet.</div>
+            <div class="table-responsive" th:unless="${#lists.isEmpty(appointments)}">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                    <tr><th>#</th><th>Date</th><th>Time</th><th>Patient</th><th>Symptoms</th><th>Status</th><th style="min-width: 320px">Action</th></tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="a : ${appointments}">
+                        <td th:text="${a.id}">1</td>
+                        <td th:text="${#temporals.format(a.appointmentDate, 'dd MMM yyyy')}">date</td>
+                        <td th:text="${#temporals.format(a.appointmentTime, 'hh:mm a')}">time</td>
+                        <td>
+                            <div th:text="${a.patient.fullName}">Patient</div>
+                            <div class="small text-muted" th:text="${a.patient.phone}">phone</div>
+                        </td>
+                        <td class="small symptom-text">
+                            <span th:text="${a.symptoms}"></span>
+                            <div th:if="${a.suggestedDepartment}" class="text-primary">
+                                <i class="bi bi-robot"></i> <span th:text="${a.suggestedDepartment}"></span>
+                            </div>
+                        </td>
+                        <td>
+                            <span th:replace="~{fragments/layout :: status(${a.status})}"></span>
+                            <div class="small text-muted mt-1" th:text="${a.doctorNotes}"></div>
+                        </td>
+                        <td>
+                            <form th:if="${a.status.name() == 'PENDING' or a.status.name() == 'CONFIRMED'}"
+                                  th:action="@{/doctor/appointments/{id}/status(id=${a.id})}" method="post"
+                                  class="d-flex gap-1">
+                                <input type="text" name="notes" class="form-control form-control-sm" placeholder="Notes (optional)">
+                                <button th:if="${a.status.name() == 'PENDING'}" name="status" value="CONFIRMED"
+                                        class="btn btn-sm btn-primary" type="submit">Confirm</button>
+                                <button th:if="${a.status.name() == 'CONFIRMED'}" name="status" value="COMPLETED"
+                                        class="btn btn-sm btn-success" type="submit">Complete</button>
+                                <button name="status" value="CANCELLED" class="btn btn-sm btn-outline-danger" type="submit">Cancel</button>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

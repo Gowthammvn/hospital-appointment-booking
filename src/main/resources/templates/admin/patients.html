@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Patients')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main class="container py-4">
+    <h1 class="h3 mb-4">Registered Patients</h1>
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light"><tr><th>#</th><th>Name</th><th>Email</th><th>Phone</th><th>Registered</th></tr></thead>
+                    <tbody>
+                    <tr th:each="p : ${patients}">
+                        <td th:text="${p.id}">1</td>
+                        <td th:text="${p.fullName}">Name</td>
+                        <td th:text="${p.email}">email</td>
+                        <td th:text="${p.phone}">phone</td>
+                        <td th:text="${#temporals.format(p.createdAt, 'dd MMM yyyy')}">date</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

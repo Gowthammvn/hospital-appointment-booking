@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Book Appointment')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main class="container py-4">
+    <h1 class="h3 mb-4">Book an Appointment</h1>
+
+    <div class="row g-4">
+        <!-- Step 1: symptom analysis -->
+        <div class="col-lg-5">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h2 class="h5"><span class="badge text-bg-primary me-1">1</span> Describe your symptoms</h2>
+                    <p class="small text-muted">Our NLP assistant (Apache OpenNLP) suggests the right department.</p>
+                    <form th:action="@{/patient/book/analyze}" method="post">
+                        <textarea name="symptoms" class="form-control mb-2" rows="4" required
+                                  placeholder="e.g. chest pain and shortness of breath when climbing stairs"
+                                  th:text="${form.symptoms}"></textarea>
+                        <button type="submit" class="btn btn-outline-primary">
+                            <i class="bi bi-robot"></i> Analyze symptoms
+                        </button>
+                    </form>
+
+                    <div th:if="${analysis}" class="alert alert-info mt-3 mb-0">
+                        <div>Suggested department:
+                            <strong th:text="${analysis.department}">Cardiology</strong>
+                            <span class="small text-muted">
+                                (<span th:text="${#numbers.formatDecimal(analysis.confidence * 100, 1, 0)}">60</span>% confidence)
+                            </span>
+                        </div>
+                        <div th:if="${analysis.confidence < 0.35}" class="small mt-1">
+                            Low confidence &mdash; you may want to see a General Medicine doctor first.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2: choose doctor and slot -->
+        <div class="col-lg-7">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h2 class="h5"><span class="badge text-bg-primary me-1">2</span> Choose doctor and time</h2>
+
+                    <form th:action="@{/patient/book}" th:object="${form}" method="post" novalidate>
+                        <div th:if="${#fields.hasGlobalErrors()}" class="alert alert-danger">
+                            <div th:each="err : ${#fields.globalErrors()}" th:text="${err}"></div>
+                        </div>
+                        <input type="hidden" th:field="*{symptoms}">
+                        <input type="hidden" th:field="*{suggestedDepartment}">
+
+                        <div class="mb-3">
+                            <label class="form-label" for="deptFilter">Department</label>
+                            <select id="deptFilter" class="form-select">
+                                <option value="">All departments</option>
+                                <option th:each="d : ${departments}" th:value="${d.id}" th:text="${d.name}"
+                                        th:selected="${d.id == suggestedDepartmentId}">Dept</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label" for="doctorId">Doctor</label>
+                            <select th:field="*{doctorId}" class="form-select"
+                                    th:classappend="${#fields.hasErrors('doctorId')} ? 'is-invalid'">
+                                <option value="">-- Select a doctor --</option>
+                                <option th:each="doc : ${doctors}" th:value="${doc.id}"
+                                        th:attr="data-dept=${doc.department.id}"
+                                        th:text="${doc.name + ' - ' + doc.specialization + ' (₹' + #numbers.formatDecimal(doc.consultationFee, 1, 0) + ')'}">
+                                    Dr. X
+                                </option>
+                            </select>
+                            <div class="invalid-feedback" th:errors="*{doctorId}"></div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" for="date">Date</label>
+                                <input type="date" th:field="*{date}" class="form-control"
+                                       th:attr="min=${#temporals.format(#temporals.createToday(), 'yyyy-MM-dd')}"
+                                       th:classappend="${#fields.hasErrors('date')} ? 'is-invalid'">
+                                <div class="invalid-feedback" th:errors="*{date}"></div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" for="time">Time slot</label>
+                                <select id="time" name="time" class="form-select"
+                                        th:attr="data-selected=${form.time != null ? #temporals.format(form.time, 'HH:mm') : ''}"
+                                        th:classappend="${#fields.hasErrors('time')} ? 'is-invalid'">
+                                    <option value="">Select doctor and date first</option>
+                                </select>
+                                <div class="invalid-feedback" th:errors="*{time}"></div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-calendar-check"></i> Book appointment</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+<script th:inline="javascript">
+    const slotsUrl = /*[[@{/api/doctors}]]*/ '/api/doctors';
+    const deptFilter = document.getElementById('deptFilter');
+    const doctorSelect = document.getElementById('doctorId');
+    const dateInput = document.getElementById('date');
+    const timeSelect = document.getElementById('time');
+
+    function filterDoctors() {
+        const dept = deptFilter.value;
+        for (const opt of doctorSelect.options) {
+            if (!opt.value) continue;
+            const visible = !dept || opt.dataset.dept === dept;
+            opt.hidden = !visible;
+            if (!visible && opt.selected) doctorSelect.value = '';
+        }
+    }
+
+    async function loadSlots() {
+        const doctorId = doctorSelect.value;
+        const date = dateInput.value;
+        timeSelect.innerHTML = '';
+        if (!doctorId || !date) {
+            timeSelect.add(new Option('Select doctor and date first', ''));
+            return;
+        }
+        timeSelect.add(new Option('Loading...', ''));
+        try {
+            const res = await fetch(`${slotsUrl}/${doctorId}/slots?date=${date}`);
+            const slots = res.ok ? await res.json() : [];
+            timeSelect.innerHTML = '';
+            if (slots.length === 0) {
+                timeSelect.add(new Option('No free slots on this date', ''));
+                return;
+            }
+            timeSelect.add(new Option(`-- ${slots.length} slots available --`, ''));
+            for (const s of slots) {
+                const opt = new Option(s, s);
+                opt.selected = s === timeSelect.dataset.selected;
+                timeSelect.add(opt);
+            }
+        } catch (e) {
+            timeSelect.innerHTML = '';
+            timeSelect.add(new Option('Could not load slots', ''));
+        }
+    }
+
+    deptFilter.addEventListener('change', () => { filterDoctors(); loadSlots(); });
+    doctorSelect.addEventListener('change', loadSlots);
+    dateInput.addEventListener('change', loadSlots);
+    filterDoctors();
+    loadSlots();
+</script>
+</body>
+</html>

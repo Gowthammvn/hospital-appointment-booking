@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Manage Doctors')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main class="container py-4">
+    <h1 class="h3 mb-4">Doctors</h1>
+    <div th:replace="~{fragments/layout :: flash}"></div>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                            <tr><th>Name</th><th>Department</th><th>Specialization</th><th>Exp.</th><th>Fee</th><th>Status</th><th></th></tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="d : ${doctors}">
+                                <td>
+                                    <div th:text="${d.name}">Dr. X</div>
+                                    <div class="small text-muted" th:text="${d.user.email}">email</div>
+                                </td>
+                                <td th:text="${d.department.name}">Dept</td>
+                                <td th:text="${d.specialization}">Spec</td>
+                                <td th:text="${d.experienceYears} + ' yrs'">5 yrs</td>
+                                <td th:text="'₹' + ${#numbers.formatDecimal(d.consultationFee, 1, 0)}">500</td>
+                                <td>
+                                    <span th:if="${d.available}" class="badge text-bg-success">Available</span>
+                                    <span th:unless="${d.available}" class="badge text-bg-secondary">Unavailable</span>
+                                </td>
+                                <td>
+                                    <form th:action="@{/admin/doctors/{id}/toggle(id=${d.id})}" method="post">
+                                        <button class="btn btn-sm btn-outline-secondary" type="submit"
+                                                th:text="${d.available} ? 'Disable' : 'Enable'">Toggle</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h2 class="h5 mb-3">Add doctor</h2>
+                    <form th:action="@{/admin/doctors}" th:object="${form}" method="post" novalidate>
+                        <div th:if="${#fields.hasGlobalErrors()}" class="alert alert-danger">
+                            <div th:each="err : ${#fields.globalErrors()}" th:text="${err}"></div>
+                        </div>
+                        <div class="mb-2">
+                            <input th:field="*{fullName}" class="form-control" placeholder="Full name (e.g. Dr. A Kumar)"
+                                   th:classappend="${#fields.hasErrors('fullName')} ? 'is-invalid'">
+                            <div class="invalid-feedback" th:errors="*{fullName}"></div>
+                        </div>
+                        <div class="mb-2">
+                            <input type="email" th:field="*{email}" class="form-control" placeholder="Login email"
+                                   th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'">
+                            <div class="invalid-feedback" th:errors="*{email}"></div>
+                        </div>
+                        <div class="mb-2">
+                            <input type="password" th:field="*{password}" class="form-control" placeholder="Initial password"
+                                   th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'">
+                            <div class="invalid-feedback" th:errors="*{password}"></div>
+                        </div>
+                        <div class="mb-2">
+                            <input th:field="*{phone}" class="form-control" placeholder="Phone"
+                                   th:classappend="${#fields.hasErrors('phone')} ? 'is-invalid'">
+                            <div class="invalid-feedback" th:errors="*{phone}"></div>
+                        </div>
+                        <div class="mb-2">
+                            <select th:field="*{departmentId}" class="form-select"
+                                    th:classappend="${#fields.hasErrors('departmentId')} ? 'is-invalid'">
+                                <option value="">-- Department --</option>
+                                <option th:each="dep : ${departments}" th:value="${dep.id}" th:text="${dep.name}">Dept</option>
+                            </select>
+                            <div class="invalid-feedback" th:errors="*{departmentId}"></div>
+                        </div>
+                        <div class="mb-2">
+                            <input th:field="*{specialization}" class="form-control" placeholder="Specialization"
+                                   th:classappend="${#fields.hasErrors('specialization')} ? 'is-invalid'">
+                            <div class="invalid-feedback" th:errors="*{specialization}"></div>
+                        </div>
+                        <div class="mb-2">
+                            <input th:field="*{qualification}" class="form-control" placeholder="Qualification (e.g. MBBS, MD)">
+                        </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col">
+                                <label class="form-label small" for="experienceYears">Experience (yrs)</label>
+                                <input type="number" min="0" th:field="*{experienceYears}" class="form-control"
+                                       th:classappend="${#fields.hasErrors('experienceYears')} ? 'is-invalid'">
+                            </div>
+                            <div class="col">
+                                <label class="form-label small" for="consultationFee">Fee (₹)</label>
+                                <input type="number" min="0" step="50" th:field="*{consultationFee}" class="form-control"
+                                       th:classappend="${#fields.hasErrors('consultationFee')} ? 'is-invalid'">
+                                <div class="invalid-feedback" th:errors="*{consultationFee}"></div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary w-100" type="submit">Add doctor</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Register')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main class="container py-5">
+    <div class="card shadow-sm mx-auto auth-card">
+        <div class="card-body p-4">
+            <h1 class="h4 mb-4 text-center">Patient registration</h1>
+
+            <form th:action="@{/register}" th:object="${form}" method="post" novalidate>
+                <div th:if="${#fields.hasGlobalErrors()}" class="alert alert-danger">
+                    <div th:each="err : ${#fields.globalErrors()}" th:text="${err}"></div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="fullName">Full name</label>
+                    <input type="text" th:field="*{fullName}" class="form-control"
+                           th:classappend="${#fields.hasErrors('fullName')} ? 'is-invalid'">
+                    <div class="invalid-feedback" th:errors="*{fullName}"></div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="email">Email</label>
+                    <input type="email" th:field="*{email}" class="form-control"
+                           th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'">
+                    <div class="invalid-feedback" th:errors="*{email}"></div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="phone">Phone</label>
+                    <input type="tel" th:field="*{phone}" class="form-control"
+                           th:classappend="${#fields.hasErrors('phone')} ? 'is-invalid'">
+                    <div class="invalid-feedback" th:errors="*{phone}"></div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="password">Password</label>
+                    <input type="password" th:field="*{password}" class="form-control"
+                           th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'">
+                    <div class="invalid-feedback" th:errors="*{password}"></div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="confirmPassword">Confirm password</label>
+                    <input type="password" th:field="*{confirmPassword}" class="form-control"
+                           th:classappend="${#fields.hasErrors('confirmPassword')} ? 'is-invalid'">
+                    <div class="invalid-feedback" th:errors="*{confirmPassword}"></div>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Register</button>
+            </form>
+            <p class="text-center small mt-3 mb-0">Already registered? <a th:href="@{/login}">Login</a></p>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

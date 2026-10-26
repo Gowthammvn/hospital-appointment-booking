@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Error')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main class="container py-5 text-center">
+    <i class="bi bi-exclamation-octagon text-warning" style="font-size: 4rem"></i>
+    <h1 class="h3 mt-3">Something went wrong <span class="text-muted" th:text="${status}"></span></h1>
+    <p class="text-muted" th:text="${status == 404} ? 'The page you requested was not found.' : 'Please try again.'">Please try again.</p>
+    <a th:href="@{/}" class="btn btn-primary">Back to home</a>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

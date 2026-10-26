@@ -1,0 +1,96 @@
+Cardiology chest pain and tightness when walking
+Cardiology heart palpitations and fast heartbeat
+Cardiology high blood pressure and chest discomfort
+Cardiology irregular heartbeat and dizziness
+Cardiology pain spreading to left arm and jaw
+Cardiology shortness of breath on exertion and swollen ankles
+Cardiology chest pressure with sweating and nausea
+Cardiology racing heart and fainting episodes
+Cardiology heart murmur and fatigue
+Cardiology hypertension and pounding heart
+Cardiology chest pain at night heart problem
+Cardiology swelling in legs and breathless while lying down
+Neurology severe headache and migraine with blurred vision
+Neurology seizures and loss of consciousness
+Neurology numbness and tingling in hands and feet
+Neurology memory loss and confusion
+Neurology dizziness vertigo and loss of balance
+Neurology weakness on one side of the body and slurred speech
+Neurology tremors and shaking hands
+Neurology frequent headaches and sensitivity to light
+Neurology fits convulsions and fainting
+Neurology nerve pain and burning sensation in legs
+Neurology trouble speaking and facial drooping
+Neurology chronic migraine and nausea with aura
+Orthopedics knee pain and swelling after injury
+Orthopedics back pain and stiffness in lower back
+Orthopedics fracture broken bone after fall
+Orthopedics joint pain in shoulder and elbow
+Orthopedics neck pain and stiff neck
+Orthopedics ankle sprain and difficulty walking
+Orthopedics hip pain while climbing stairs
+Orthopedics arthritis with stiff swollen joints
+Orthopedics sports injury torn ligament in knee
+Orthopedics wrist pain and bone pain
+Orthopedics spine pain and slipped disc
+Orthopedics muscle sprain and joint dislocation
+Dermatology skin rash and itching
+Dermatology acne and pimples on face
+Dermatology eczema dry and scaly skin
+Dermatology hair loss and dandruff
+Dermatology red patches and skin allergy
+Dermatology fungal infection between toes
+Dermatology psoriasis with flaky skin
+Dermatology moles changing color on skin
+Dermatology hives and itchy bumps
+Dermatology nail infection and discoloration
+Dermatology skin burns blisters and peeling
+Dermatology dark spots and pigmentation on skin
+ENT ear pain and ear discharge
+ENT hearing loss and ringing in ears
+ENT sore throat and difficulty swallowing
+ENT blocked nose and sinus pain
+ENT tonsils swollen and throat infection
+ENT nose bleeding and nasal congestion
+ENT hoarse voice and losing voice
+ENT sinusitis with headache around eyes and nose
+ENT snoring and blocked nasal passage
+ENT ear infection with fever in child
+ENT tinnitus and ear fullness
+ENT throat pain and swollen glands in neck
+Gastroenterology stomach pain and abdominal cramps
+Gastroenterology acidity heartburn and acid reflux
+Gastroenterology diarrhea and loose motions
+Gastroenterology constipation and bloating
+Gastroenterology vomiting and nausea after eating
+Gastroenterology blood in stool and rectal bleeding
+Gastroenterology yellow skin and eyes jaundice liver problem
+Gastroenterology indigestion and gas
+Gastroenterology ulcer pain in upper abdomen
+Gastroenterology loss of appetite and stomach upset
+Gastroenterology difficulty digesting food and belly pain
+Gastroenterology irritable bowel and frequent stools
+Pulmonology persistent cough with phlegm
+Pulmonology wheezing and asthma attack
+Pulmonology shortness of breath and breathing difficulty
+Pulmonology coughing up blood
+Pulmonology chronic cough for weeks
+Pulmonology lung infection pneumonia with fever and cough
+Pulmonology tight chest while breathing and wheezing at night
+Pulmonology smoker cough and breathlessness
+Pulmonology tuberculosis cough and night sweats
+Pulmonology low oxygen and rapid breathing
+Pulmonology bronchitis with mucus
+Pulmonology dry cough and difficulty breathing
+General_Medicine fever and body ache
+General_Medicine cold cough and mild fever
+General_Medicine fatigue and weakness
+General_Medicine general checkup and health screening
+General_Medicine diabetes high blood sugar and frequent urination
+General_Medicine weight loss and tiredness
+General_Medicine viral fever with chills
+General_Medicine flu symptoms and runny nose
+General_Medicine thyroid problem and weight gain
+General_Medicine feeling unwell and loss of energy
+General_Medicine dehydration and dizziness in heat
+General_Medicine routine health check and vaccination

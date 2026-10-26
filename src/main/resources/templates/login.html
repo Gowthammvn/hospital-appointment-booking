@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Login')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main class="container py-5">
+    <div class="card shadow-sm mx-auto auth-card">
+        <div class="card-body p-4">
+            <h1 class="h4 mb-4 text-center">Sign in</h1>
+            <div th:replace="~{fragments/layout :: flash}"></div>
+            <div th:if="${param.error}" class="alert alert-danger">Invalid email or password.</div>
+            <div th:if="${param.logout}" class="alert alert-info">You have been logged out.</div>
+
+            <form th:action="@{/login}" method="post">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" id="email" name="email" class="form-control" required autofocus>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" id="password" name="password" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Login</button>
+            </form>
+            <p class="text-center small mt-3 mb-0">New patient? <a th:href="@{/register}">Create an account</a></p>
+        </div>
+    </div>
+
+    <div class="card mx-auto auth-card mt-3">
+        <div class="card-body small text-muted">
+            <strong>Demo accounts</strong>
+            <ul class="mb-0">
+                <li>Admin: admin@hospital.com / admin123</li>
+                <li>Doctor: ananya@hospital.com / doctor123</li>
+                <li>Patient: patient@hospital.com / patient123</li>
+            </ul>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

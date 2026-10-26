@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Departments')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main class="container py-4">
+    <h1 class="h3 mb-4">Departments</h1>
+    <div th:replace="~{fragments/layout :: flash}"></div>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-body p-0">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light"><tr><th>#</th><th>Name</th><th>Description</th></tr></thead>
+                        <tbody>
+                        <tr th:each="d : ${departments}">
+                            <td th:text="${d.id}">1</td>
+                            <td th:text="${d.name}">Name</td>
+                            <td class="text-muted" th:text="${d.description}">Description</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h2 class="h5 mb-3">Add department</h2>
+                    <form th:action="@{/admin/departments}" method="post">
+                        <input name="name" class="form-control mb-2" placeholder="Name" required>
+                        <textarea name="description" class="form-control mb-3" rows="3" placeholder="Description"></textarea>
+                        <button class="btn btn-primary w-100" type="submit">Add</button>
+                    </form>
+                    <p class="small text-muted mt-3 mb-0">
+                        Note: the symptom analyzer only suggests departments it was trained on
+                        (see <code>nlp/symptom-training.txt</code>).
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

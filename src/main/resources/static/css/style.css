@@ -1,0 +1,41 @@
+body {
+    background-color: #f5f7fb;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+.hero {
+    background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 60%, #084298 100%);
+    color: #fff;
+}
+
+.card {
+    border: none;
+    border-radius: 0.75rem;
+}
+
+.stat-card .display-6 {
+    font-weight: 600;
+}
+
+.dept-icon {
+    font-size: 2rem;
+    color: #0d6efd;
+}
+
+.auth-card {
+    max-width: 460px;
+}
+
+.table td, .table th {
+    vertical-align: middle;
+}
+
+.symptom-text {
+    max-width: 260px;
+}
